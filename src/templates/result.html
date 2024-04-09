@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/resultstyle.css">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            background-image: url('static/css/simple.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0; 
+            padding: 0; 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .background-overlay {
+            background-color: rgba(255, 165, 0, 1.0);
+            padding: 20px;
+            text-align: center;
+        }
+        .image-container {
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 300px; /* 画像の幅を指定 */
+            height: auto; /* 高さを自動調整 */
+        }
+        .top-link {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay">
+        <h1>これは {{ ingredientsName }} です</h1>
+        <div class="image-container">
+            <img src="{{ image }}">
+        </div>
+        <a href="./" class="top-link">トップへ戻る</a>
+    </div>
+</body>
+</html>
+

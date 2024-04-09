@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>食材判定アプリ</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            background-image: url('static/css/Adobe2.jpeg');
+            background-size: cover;
+            background-position: center;
+            margin: 0; 
+            padding: 0; 
+            height: 100vh;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .background-overlay {
+            background-color: rgba(255, 165, 0, 1.0);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+        <div class="background-overlay">
+            <h1>ファイルをアップロードして食材を判定しよう</h1>
+            <form method="post" enctype="multipart/form-data">
+                <p><input type="file" name="filename">
+                    <input type="submit" value="判定"></p>
+            </form>
+        </div>
+</body>
+</html>
+
+
