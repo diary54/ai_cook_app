@@ -8,7 +8,7 @@ import base64
 def predict(img):
     net = Net().cpu().eval()
 
-    net.load_state_dict(torch.load('./src/ingredients.pt', map_location=torch.device('cpu')))
+    net.load_state_dict(torch.load('./src/ingredients.pt', map_location=torch.device('cuda' if torch.cuda.is_available() else 'cpu')))
 
     img = transform_image(img)
 
@@ -45,7 +45,7 @@ app = Flask(__name__)
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif', 'jpeg'])
 
-def allwed_file(filename):
+def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -58,7 +58,7 @@ def predicts():
         
         file = request.files['filename']
         
-        if file and allwed_file(file.filename):
+        if file and allowed_file(file.filename):
 
             #　画像ファイルに対する処理
             buf = io.BytesIO()
