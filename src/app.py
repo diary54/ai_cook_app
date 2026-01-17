@@ -1,19 +1,51 @@
-import torch
-from food import transform_image, Net 
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template
 import io
-from PIL import Image # type: ignore
+from PIL import Image
 import base64
+import torch
+from pathlib import Path
 
+from src.food import transform_image, Net
+
+# ==================================================
+# パス設定
+# ==================================================
+BASE_DIR = Path(__file__).resolve().parent          # aicook_app/src
+BASE_ROOT = BASE_DIR.parent                        # aicook_app
+MODEL_PATH = BASE_DIR / 'ingredients.pt'
+
+# ==================================================
+# Flask 設定（templates / static を明示）
+# ==================================================
+app = Flask(
+    __name__,
+    template_folder=str(BASE_ROOT / 'templates'),
+    static_folder=str(BASE_ROOT / 'src' / 'static')
+)
+
+# ==================================================
+# モデル準備（起動時に1回だけ）
+# ==================================================
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+net = Net().to(device)
+net.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+net.eval()
+
+# ==================================================
+# 推論関数
+# ==================================================
 def predict(img):
-    net = Net().cpu().eval()
-
-    net.load_state_dict(torch.load('./src/ingredients.pt', map_location=torch.device('cuda' if torch.cuda.is_available() else 'cpu')))
-
     img = transform_image(img)
 
-    y = torch.argmax(net(torch.tensor(img)), dim=1).cpu().detach().numpy()
+    with torch.no_grad():
+        y = torch.argmax(
+            net(torch.tensor(img).to(device)),
+            dim=1
+        ).cpu().numpy()
+
     return y
+
 
 def getName(label):
     if label == 0:
@@ -40,45 +72,40 @@ def getName(label):
         return 'レタス'
     elif label == 11:
         return 'キャベツ'
-    
-app = Flask(__name__)
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'gif', 'jpeg'])
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/', methods = ['GET', 'POST'])
+# ==================================================
+# ルーティング
+# ==================================================
+@app.route('/', methods=['GET', 'POST'])
 def predicts():
-    
     if request.method == 'POST':
-        
-        if 'filename' not in request.files:
-            return redirect(request.url)
-        
-        file = request.files['filename']
-        
-        if file and allowed_file(file.filename):
+        file = request.files.get('filename')
 
-            #　画像ファイルに対する処理
-            buf = io.BytesIO()
+        if file:
+            # 画像読み込み
             image = Image.open(file).convert('RGB')
-         
-            image.save(buf, 'png')
-         
+
+            # ---------- 画像を base64 に変換 ----------
+            buf = io.BytesIO()
+            image.save(buf, format='PNG')
             base64_str = base64.b64encode(buf.getvalue()).decode('utf-8')
-        
-            base64_data = 'data:image/png;base64,{}'.format(base64_str)
+            base64_image = f'data:image/png;base64,{base64_str}'
 
-            # 推論
+            # ---------- 推論 ----------
             pred = predict(image)
-            ingredientsName_ = getName(pred)
-            return render_template('result.html', ingredientsName=ingredientsName_, image=base64_data)
-        return redirect(request.url)
+            ingredientsName_ = getName(int(pred[0]))
 
-    elif request.method == 'GET':
-        return render_template('index.html')
-    
-# アプリケーションの実行の定義
+            return render_template(
+                'result.html',
+                ingredientsName=ingredientsName_,
+                image=base64_image
+            )
+
+    return render_template('index.html')
+
+# ==================================================
+# アプリ起動
+# ==================================================
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
+
