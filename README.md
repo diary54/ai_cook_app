@@ -6,7 +6,7 @@ Flask を用いた Web API と、PyTorch / TensorFlow の推論モデルで構�
 ## 技術スタック
 
 ### 言語
-- Python 3.x
+- Python 3.10 / 3.11（動作確認済み）
 
 ### バックエンド
 - Flask（Web API）
