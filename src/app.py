@@ -24,27 +24,33 @@ app = Flask(
 )
 
 # ==================================================
-# モデル準備（起動時に1回だけ）
+# モデル（遅延ロード）
 # ==================================================
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+net = None
 
-net = Net().to(device)
-net.load_state_dict(torch.load(MODEL_PATH, map_location=device))
-net.eval()
+def get_model():
+    global net
+    if net is None:
+        net = Net().to(device)
+        net.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+        net.eval()
+    return net
 
 # ==================================================
-# 推論関数
+# 推論
 # ==================================================
 def predict(img):
-    img = transform_image(img)
+  img = transform_image(img)
+  model = get_model()
 
-    with torch.no_grad():
-        y = torch.argmax(
-            net(torch.tensor(img).to(device)),
-            dim=1
-        ).cpu().numpy()
+  with torch.no_grad():
+      y = torch.argmax(
+          model(torch.tensor(img).to(device)),
+          dim=1
+      ).cpu().numpy()
 
-    return y
+  return y
 
 
 def getName(label):
@@ -107,5 +113,5 @@ def predicts():
 # アプリ起動
 # ==================================================
 if __name__ == '__main__':
-    app.run(debug=True, port=5002)
+  app.run(debug=True, port=5002)
 
