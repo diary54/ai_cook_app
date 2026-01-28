@@ -33,7 +33,10 @@ https://ai-cook-app.onrender.com
 - Gunicorn によるアプリケーション起動
 - AWS EC2 / ECS(Fargate) でのデプロイも検討中
 
-### 起動コマンド
+
+# Renderでの起動方法
+
+## 起動コマンド
 ```
 gunicorn --chdir src app:app --bind 0.0.0.0:$PORT --workers 1
 ```
