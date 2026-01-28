@@ -33,45 +33,48 @@ https://ai-cook-app.onrender.com
 - Gunicorn によるアプリケーション起動
 - AWS EC2 / ECS(Fargate) でのデプロイも検討中
 
+
+## Renderでの起動方法
+
 ### 起動コマンド
 ```
 gunicorn --chdir src app:app --bind 0.0.0.0:$PORT --workers 1
 ```
 
 
-# ローカルでの起動方法
+## ローカルでの起動方法
 
-## 1. リポジトリをローカルにクローン（コピー）する
+### 1. リポジトリをローカルにクローン（コピー）する
 ```
 git clone https://github.com/diary54/ai_cook_app.git
 cd ai_cook_app
 ```
 
-## 2. 仮想環境の作成
+### 2. 仮想環境の作成
 
-### Windows の場合
+#### Windows の場合
 ```
 python -m venv my_env
 my_env\Scripts\activate
 ```
-### Mac / Linux の場合
+#### Mac / Linux の場合
 ```
 # python -m venv my_env
 # source my_env/bin/activate
 ```
-## 3. pip を最新版にアップデート
+### 3. pip を最新版にアップデート
 ```
 pip install --upgrade pip
 ```
-## 4. 依存パッケージをインストール
+### 4. 依存パッケージをインストール
 ```
 pip install -r requirements.txt
 ```
-## 5. Flask アプリを起動
+### 5. Flask アプリを起動
 ```
 python -m src.app
 ```
-## ブラウザで以下にアクセスしてください
+### ブラウザで以下にアクセスしてください
 http://localhost:5002
 
 
