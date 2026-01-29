@@ -79,6 +79,8 @@ def getName(label):
     elif label == 11:
         return 'キャベツ'
 
+MAX_SIZE = 512
+
 # ==================================================
 # ルーティング
 # ==================================================
@@ -90,6 +92,9 @@ def predicts():
         if file:
             # 画像読み込み
             image = Image.open(file).convert('RGB')
+            
+            # ---------- ここで縮小 ----------
+            image.thumbnail((MAX_SIZE, MAX_SIZE))  # アスペクト比を保持してリサイズ
 
             # ---------- 画像を base64 に変換 ----------
             buf = io.BytesIO()
