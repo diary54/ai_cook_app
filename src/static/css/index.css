@@ -7,7 +7,7 @@ html, body {
   margin: 0;
 }
 .main {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,5 +26,24 @@ html, body {
 .button {
   font-size: clamp(14px, 1.5vw, 22px);
 }
+.file-label {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: opacity 0.2s ease;
+  padding: 10px;
+  margin-right: 10px;
+}
+.file-label:hover {
+  opacity: 0.7;
+}
+.file-label input[type="file"] {
+  display: none;
+}
+
 
 

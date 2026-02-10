@@ -8,7 +8,3 @@ my_env/
 
 # OS files
 .DS_Store
-
-# Test / backup folders
-テスト用/
-予備/

@@ -6,12 +6,12 @@ import torchvision.transforms as transforms
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
-    transforms.ToTensor(),  # (H, W, C) → (C, H, W), [0,1]
+    transforms.ToTensor(), 
 ])
 
 def transform_image(img):
     img = transform(img)
-    img = img.unsqueeze(0)  # batch 次元追加
+    img = img.unsqueeze(0)  
     return img
 
 class Net(nn.Module):
